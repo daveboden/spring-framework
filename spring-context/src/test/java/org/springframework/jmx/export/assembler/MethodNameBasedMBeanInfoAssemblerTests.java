@@ -16,9 +16,16 @@
 
 package org.springframework.jmx.export.assembler;
 
+import java.util.Arrays;
+
+import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.management.modelmbean.ModelMBeanAttributeInfo;
 import javax.management.modelmbean.ModelMBeanInfo;
+
+import org.springframework.jmx.support.JmxUtils;
 
 /**
  * @author Rob Harrop
@@ -61,8 +68,23 @@ public class MethodNameBasedMBeanInfoAssemblerTests extends AbstractJmxAssembler
 	public void testSetNameParameterIsNamed() throws Exception {
 		ModelMBeanInfo info = getMBeanInfoFromAssembler();
 
-		MBeanOperationInfo operationSetAge = info.getOperation("setName");
-		assertEquals("name", operationSetAge.getSignature()[0].getName());
+		MBeanOperationInfo operationSetName = info.getOperation("setName");
+		assertEquals("name", operationSetName.getSignature()[0].getName());
+	}
+
+	public void testSetNameParameterIsNamedWithNoAnnotations() throws Exception {
+		MBeanServer server = JmxUtils.locateMBeanServer();
+		System.out.println(Arrays.toString(server.getDomains()));
+		MBeanInfo info = server.getMBeanInfo(new ObjectName("bean:name=testBean6"));
+
+		for(MBeanOperationInfo operation : info.getOperations()) {
+			if(operation.getName().equals("publishDetails")) {
+				assertEquals("name", operation.getSignature()[0].getName());
+				return;
+			}
+		}
+		
+		fail("Didn't find publishDetails operation");
 	}
 
 	@Override

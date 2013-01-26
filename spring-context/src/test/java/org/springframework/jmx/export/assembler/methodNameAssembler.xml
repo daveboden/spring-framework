@@ -9,6 +9,9 @@
 				<entry key="bean:name=testBean5">
 					<ref local="testBean"/>
 				</entry>
+				<entry key="bean:name=testBean6">
+					<ref local="testNoAnnotationsBean"/>
+				</entry>
 			</map>
 		</property>
 		<property name="assembler">
@@ -33,6 +36,15 @@
 		</property>
 		<property name="age">
 			<value>100</value>
+		</property>
+	</bean>
+
+	<bean id="testNoAnnotationsBean" class="org.springframework.jmx.JmxNoAnnotationsTestBean">
+		<property name="name">
+			<value>TEST-NO-ANNOTATIONS</value>
+		</property>
+		<property name="age">
+			<value>200</value>
 		</property>
 	</bean>
 
